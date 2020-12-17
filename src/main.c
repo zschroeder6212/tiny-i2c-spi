@@ -150,8 +150,8 @@ int main (void)
     SPI_setDataMode(0b00);
     SPI_setBitOrder(MSBFIRST);
 
-    CS_DDR |= (1<<PA3);
-    CS_PORT |= (1<<PA3);
+    CS_DDR |= (1<<CS);
+    CS_PORT |= (1<<CS);
 
 #ifdef DEBUG
     softSerialInit(&DDRB, &PORTB, &PINB, PB1, PB2);

@@ -40,7 +40,6 @@
 
 uint8_t SPI_buffer[BUFFER_SIZE];
 
-
 uint8_t received_index = 0;
 uint8_t transmit_index = 0;
 
@@ -55,7 +54,7 @@ void ss_puts(char* s)
 
 void ss_putn(uint8_t val, uint8_t base)
 {
-  char out[8];
+  char out[9];
   itoa(val, out, base);
   ss_puts(out);
 }
@@ -85,6 +84,9 @@ void I2C_received(uint8_t bytes_recieved)
                     received_index = 0;
                 }
             }
+#ifdef DEBUG
+                softSerialWrite('\n');
+#endif
 
             CS_PORT |= (1<<CS);
             break;

@@ -9,6 +9,9 @@ all: main.c
 flash: all
 	avrdude -c $(programmer) -p $(MCU) -U flash:w:i2c-spi-bridge.hex
 
+fuses:
+	avrdude -c $(programmer) -p $(MCU) -U lfuse:w:0xe2:m
+
 # make clean - remove .o files and the executable file.
 clean:
 	rm -f *.o i2c-spi-bridge.hex i2c-spi-bridge.elf 

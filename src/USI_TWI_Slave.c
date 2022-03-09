@@ -166,6 +166,10 @@ static volatile uint8_t txHead;
 static volatile uint8_t txTail;
 static volatile uint8_t txCount;
 
+void    (*_onTwiDataRequest)(void);
+void    (*usi_onRequestPtr)(void);
+void    (*usi_onReceiverPtr)(uint8_t);
+
 static void flushTwiBuffers(void) {
     rxTail  = 0;
     rxHead  = 0;
@@ -193,7 +197,6 @@ bool usiTwiDataInTransmitBuffer(void) {
 }
 
 void usiTwiTransmitByte(uint8_t data) {
-    uint8_t tmphead;
     while (txCount == TWI_TX_BUFFER_SIZE);
     txBuf[txHead] = data;
     txHead = (txHead + 1) & TWI_TX_BUFFER_MASK;
@@ -246,6 +249,7 @@ ISR(USI_OVERFLOW_VECTOR) {
                 SET_USI_TO_TWI_START_CONDITION_MODE();
                 return;
             }
+            //fallthrough
         case (USI_SLAVE_SEND_DATA):
             if (txCount) {
                 USIDR = txBuf[txTail];

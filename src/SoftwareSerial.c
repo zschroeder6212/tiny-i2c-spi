@@ -299,7 +299,7 @@ uint8_t softSerialBegin(long speed) {
   }
 #endif
 
-  if ( ! error && ! rxpin == SOFTWARE_SERIAL_RX_DISABLED )
+  if ( !error && rxpin != SOFTWARE_SERIAL_RX_DISABLED )
   {
 
 #ifdef PCIE0

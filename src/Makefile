@@ -1,17 +1,33 @@
-MCU = attiny84
-programmer = usbtiny
+MCU		:= attiny84
+programmer	:= usbtiny
 
-all: main.c
-	avr-gcc -mmcu=$(MCU) -Wall -Os -o i2c-spi-bridge.elf main.c USI_TWI_Slave.c SoftSPI.c SoftwareSerial.c
-	avr-objcopy -j .text -j .data -O ihex i2c-spi-bridge.elf i2c-spi-bridge.hex
-	avr-size --mcu=$(MCU) --format=avr i2c-spi-bridge.elf
+CC	:= avr-gcc
+OBJCOPY	:= avr-objcopy
+SIZE	:= avr-size
+AVRDUDE	:= avrdude
+CFLAGS	:= -Wall -Wextra -Os -mmcu=$(MCU)
 
-flash: all
-	avrdude -c $(programmer) -p $(MCU) -U flash:w:i2c-spi-bridge.hex
+.PHONY: all
+all: i2c-spi-bridge.elf
 
-fuses:
-	avrdude -c $(programmer) -p $(MCU) -U lfuse:w:0xe2:m
-
-# make clean - remove .o files and the executable file.
+.PHONY: clean
 clean:
-	rm -f *.o i2c-spi-bridge.hex i2c-spi-bridge.elf 
+	rm -f *.o i2c-spi-bridge.hex i2c-spi-bridge.elf
+
+.PHONY: size
+size: i2c-spi-bridge.elf
+	$(SIZE) --mcu=$(MCU) --format=avr $<
+
+.PHONY: flash
+flash: i2c-spi-bridge.hex size
+	$(AVRDUDE) -c $(programmer) -p $(MCU) -U flash:w:$<
+
+.PHONY: fuses
+fuses:
+	$(AVRDUDE) -c $(programmer) -p $(MCU) -U lfuse:w:0xe2:m
+
+i2c-spi-bridge.elf: main.o USI_TWI_Slave.o SoftSPI.o SoftwareSerial.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+i2c-spi-bridge.hex: i2c-spi-bridge.elf
+	$(OBJCOPY) -j .text -j .data -O ihex $< $@

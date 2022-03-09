@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <avr/interrupt.h>
 #include <string.h>
-#include <stdlib.h> 
+#include <stdlib.h>
 
 #include "SoftSPI.h"
 #include "USI_TWI_Slave.h"
@@ -34,9 +34,9 @@
 #define CMD_TRANSMIT    1
 #define CMD_CONFIGURE   2
 
-#define MASK_SPI_MODE       0x03
-#define MASK_SPI_ORDER      0x04
-#define MASK_SPI_CLOCK_DIV  0x38
+#define MASK_SPI_MODE       0b000011
+#define MASK_SPI_ORDER      0b000100
+#define MASK_SPI_CLOCK_DIV  0b111000
 
 uint8_t SPI_buffer[BUFFER_SIZE];
 
@@ -95,9 +95,6 @@ void I2C_received(uint8_t bytes_recieved)
         {
 
             /*
-             *
-             *   !!!UNTESTED!!!   
-             *
              *   bit 0 is CPOL
              *   bit 1 is CPHA
              *   bit 2 is bit order 0=LSB firts 1=MSB first
@@ -110,14 +107,13 @@ void I2C_received(uint8_t bytes_recieved)
              *       SPI_CLOCK_DIV64 0x05
              *       SPI_CLOCK_DIV128 0x06
              *   bit 7-8 is unused
-             *
              */
 
             uint8_t received_byte = usiTwiReceiveByte();
 
-            SPI_setClockDivider((received_byte>>3)&MASK_SPI_CLOCK_DIV);
-            SPI_setDataMode(received_byte&MASK_SPI_MODE);
-            SPI_setBitOrder((received_byte>>2)&MASK_SPI_ORDER);
+            SPI_setClockDivider((received_byte & MASK_SPI_CLOCK_DIV) >> 3);
+            SPI_setDataMode(received_byte & MASK_SPI_MODE);
+            SPI_setBitOrder((received_byte & MASK_SPI_ORDER) >> 2);
         }
     }
 }
@@ -132,7 +128,7 @@ void I2C_requested()
 }
 
 int main (void)
-{   
+{
     /* init I2C */
     usiTwiSlaveInit(I2C_ADDR);
 

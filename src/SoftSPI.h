@@ -61,13 +61,6 @@
 #define HIGH 1
 
 void wait(uint_fast8_t del);
-uint8_t _cke;
-uint8_t _ckp;
-uint8_t _delay;
-uint8_t _miso;
-uint8_t _mosi;
-uint8_t _sck;
-uint8_t _order;
 
 void SPI_init(uint8_t mosi, uint8_t miso, uint8_t sck);
 void SPI_begin();

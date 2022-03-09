@@ -31,6 +31,14 @@
 
 #include "SoftSPI.h"
 
+uint8_t _cke;
+uint8_t _ckp;
+uint8_t _delay;
+uint8_t _miso;
+uint8_t _mosi;
+uint8_t _sck;
+uint8_t _order;
+
 void digitalWrite(uint8_t pin, uint8_t val)
 {
     if (val == LOW) {

@@ -60,7 +60,7 @@ void SPI_init(uint8_t mosi, uint8_t miso, uint8_t sck) {
 
 void SPI_begin() {
     SPI_DDR |= (1 << _mosi);
-    SPI_DDR |= (0 << _miso);
+    SPI_DDR &= ~(1 << _miso);
     SPI_DDR |= (1 << _sck);
     
     /*
@@ -71,9 +71,9 @@ void SPI_begin() {
 }
 
 void SPI_end() {
-    SPI_DDR |= (0 << _mosi);
-    SPI_DDR |= (0 << _miso);
-    SPI_DDR |= (0 << _sck);
+    SPI_DDR &= ~(1 << _mosi);
+    SPI_DDR &= ~(1 << _miso);
+    SPI_DDR &= ~(1 << _sck);
     /*
     pinMode(_mosi, INPUT);
     pinMode(_miso, INPUT);
